@@ -32,6 +32,7 @@ function pack_for ()
   LIBNAME=$1
   mkdir -p ${TMP_DIR}/lib/
   ${DEVROOT}/usr/bin/lipo \
+  	${TMP_DIR}/i386/lib/lib${LIBNAME}.a \
 	${TMP_DIR}/x86_64/lib/lib${LIBNAME}.a \
 	${TMP_DIR}/armv7s/lib/lib${LIBNAME}.a \
 	${TMP_DIR}/arm64/lib/lib${LIBNAME}.a \
@@ -42,8 +43,9 @@ curl -O https://raw.githubusercontent.com/sinofool/build-openssl-ios/master/patc
 #cp ../build-openssl-ios/patch-conf.patch .
 patch Configurations/10-main.conf < patch-conf.patch
 
-build_for ios64sim-cross x86_64 SIM || exit 2
-build_for ios-cross armv7s IOS || exit 4
+build_for iossim-cross i386 SIM || exit 2
+build_for ios64sim-cross x86_64 SIM || exit 3
+build_for ios-cross armv7 IOS || exit 4
 build_for ios64-cross arm64 IOS || exit 5
 
 pack_for ssl || exit 6
